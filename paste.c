@@ -91,8 +91,11 @@ bool main(int argc, char *argv[])
     strcat(destdir, "\\");
   }
   
-  if ( !OpenClipboard(NULL) )  
-	  printf("ERROR: Cannot open clipboard.\n");
+  if ( !OpenClipboard(NULL) )
+  {
+    printf("ERROR: Cannot open clipboard.\n");
+    return 1;
+  }
 
   if (IsClipboardFormatAvailable(CF_HDROP))
   {

@@ -11,7 +11,13 @@ bool CopyDirectory(char *srcdir, char *destdir)
   char *sd; 
 
   strcpy(sourceDir, srcdir);
-  strcat(sourceDir, "\\*.*");
+  if (strlen(sourceDir) + 5 < _MAX_PATH) // 5 chars for "\*.*" + null
+    strcat(sourceDir, "\\*.*");
+  else
+  {
+    printf("ERROR: Source directory path too long!\n");
+    return 1;
+  }
   sd = &sourceDir[0];
   hFile = FindFirstFile(sd, fd);
   
@@ -29,7 +35,9 @@ bool CopyDirectory(char *srcdir, char *destdir)
     FormatLastError();
     PrintColour("Error: ", FOREGROUND_INTENSITY | FOREGROUND_RED);
     printf("%s", errorMessage);
+    FreeLastError();
     printf("     : Couldn't create directory %s!\n", createDir);
+    FindClose(hFile);
     return 1;
   }
   else
@@ -65,13 +73,31 @@ bool CopyDirectory(char *srcdir, char *destdir)
         //printf("<DIR>\t\t%s\\%s\n", srcdir, fd->cFileName);
         char newDir[_MAX_PATH];
         strcpy(newDir, srcdir);
-        strcat(newDir, "\\");
-        strcat(newDir, fd->cFileName);
+        if (strlen(newDir) + 1 + strlen(fd->cFileName) < _MAX_PATH - 1)
+        {
+          strcat(newDir, "\\");
+          strcat(newDir, fd->cFileName);
+        }
+        else
+        {
+          PrintColour("ERROR: Path too long for subdirectory!\n", FOREGROUND_RED | FOREGROUND_INTENSITY);
+          FindClose(hFile);
+          return 1;
+        }
         //printf("New Dirname = %s\n", newDir);
 
         strcpy(createDir, destdir);
-        strcat(createDir, "\\");
-        strcat(createDir, fd->cFileName);      
+        if (strlen(createDir) + 1 + strlen(fd->cFileName) < _MAX_PATH - 1)
+        {
+          strcat(createDir, "\\");
+          strcat(createDir, fd->cFileName);
+        }
+        else
+        {
+          PrintColour("ERROR: Destination path too long for subdirectory!\n", FOREGROUND_RED | FOREGROUND_INTENSITY);
+          FindClose(hFile);
+          return 1;
+        }      
 
         if (CopyDirectory(newDir, createDir) == 1)
         {
@@ -92,12 +118,30 @@ bool CopyDirectory(char *srcdir, char *destdir)
       char srcFile[_MAX_PATH];
 
       strcpy(destFile, destdir);
-      strcat(destFile, "\\");
-      strcat(destFile, fd->cFileName);
+      if (strlen(destFile) + 1 + strlen(fd->cFileName) < _MAX_PATH - 1)
+      {
+        strcat(destFile, "\\");
+        strcat(destFile, fd->cFileName);
+      }
+      else
+      {
+        PrintColour("ERROR: Destination file path too long!\n", FOREGROUND_RED | FOREGROUND_INTENSITY);
+        FindClose(hFile);
+        return 1;
+      }
 
       strcpy(srcFile, srcdir);
-      strcat(srcFile, "\\");
-      strcat(srcFile, fd->cFileName);
+      if (strlen(srcFile) + 1 + strlen(fd->cFileName) < _MAX_PATH - 1)
+      {
+        strcat(srcFile, "\\");
+        strcat(srcFile, fd->cFileName);
+      }
+      else
+      {
+        PrintColour("ERROR: Source file path too long!\n", FOREGROUND_RED | FOREGROUND_INTENSITY);
+        FindClose(hFile);
+        return 1;
+      }
 
       printf("\xBA Copying: %s\n\xBA To     : %s\n", srcFile, destFile);
       
@@ -106,11 +150,14 @@ bool CopyDirectory(char *srcdir, char *destdir)
         FormatLastError();
         PrintColour("Error: ", FOREGROUND_INTENSITY | FOREGROUND_RED);
         printf("%s\n", errorMessage);
+        FreeLastError();
+        FindClose(hFile);
         return 1;
       }
       else printf("File copied.\n");
     }
   }
+  FindClose(hFile);
   return 0;
 }
 
@@ -124,7 +171,13 @@ bool MoveDirectory(char *srcdir, char *destdir)
   char *sd; 
 
   strcpy(sourceDir, srcdir);
-  strcat(sourceDir, "\\*.*");
+  if (strlen(sourceDir) + 5 < _MAX_PATH) // 5 chars for "\*.*" + null
+    strcat(sourceDir, "\\*.*");
+  else
+  {
+    printf("ERROR: Source directory path too long!\n");
+    return 1;
+  }
   sd = &sourceDir[0];
   hFile = FindFirstFile(sd, fd);
   
@@ -142,7 +195,9 @@ bool MoveDirectory(char *srcdir, char *destdir)
     FormatLastError();
     PrintColour("Error: ", FOREGROUND_INTENSITY | FOREGROUND_RED);
     printf("%s", errorMessage);
+    FreeLastError();
     printf("     : Couldn't create directory %s!\n", createDir);
+    FindClose(hFile);
     return 1;
   }
   else
@@ -156,12 +211,30 @@ bool MoveDirectory(char *srcdir, char *destdir)
     {
       char newDir[_MAX_PATH];
       strcpy(newDir, srcdir);
-      strcat(newDir, "\\");
-      strcat(newDir, fd->cFileName);
+      if (strlen(newDir) + 1 + strlen(fd->cFileName) < _MAX_PATH - 1)
+      {
+        strcat(newDir, "\\");
+        strcat(newDir, fd->cFileName);
+      }
+      else
+      {
+        PrintColour("ERROR: Path too long for subdirectory!\n", FOREGROUND_RED | FOREGROUND_INTENSITY);
+        FindClose(hFile);
+        return 1;
+      }
 
       strcpy(createDir, destdir);
-      strcat(createDir, "\\");
-      strcat(createDir, fd->cFileName);      
+      if (strlen(createDir) + 1 + strlen(fd->cFileName) < _MAX_PATH - 1)
+      {
+        strcat(createDir, "\\");
+        strcat(createDir, fd->cFileName);
+      }
+      else
+      {
+        PrintColour("ERROR: Destination path too long for subdirectory!\n", FOREGROUND_RED | FOREGROUND_INTENSITY);
+        FindClose(hFile);
+        return 1;
+      }      
 
       if (MoveDirectory(newDir, createDir) == 1)
       {
@@ -176,12 +249,30 @@ bool MoveDirectory(char *srcdir, char *destdir)
       char srcFile[_MAX_PATH];
 
       strcpy(destFile, destdir);
-      strcat(destFile, "\\");
-      strcat(destFile, fd->cFileName);
+      if (strlen(destFile) + 1 + strlen(fd->cFileName) < _MAX_PATH - 1)
+      {
+        strcat(destFile, "\\");
+        strcat(destFile, fd->cFileName);
+      }
+      else
+      {
+        PrintColour("ERROR: Destination file path too long!\n", FOREGROUND_RED | FOREGROUND_INTENSITY);
+        FindClose(hFile);
+        return 1;
+      }
 
       strcpy(srcFile, srcdir);
-      strcat(srcFile, "\\");
-      strcat(srcFile, fd->cFileName);
+      if (strlen(srcFile) + 1 + strlen(fd->cFileName) < _MAX_PATH - 1)
+      {
+        strcat(srcFile, "\\");
+        strcat(srcFile, fd->cFileName);
+      }
+      else
+      {
+        PrintColour("ERROR: Source file path too long!\n", FOREGROUND_RED | FOREGROUND_INTENSITY);
+        FindClose(hFile);
+        return 1;
+      }
 
       printf("\xBA Moving: %s\n\xBA To     : %s\n", srcFile, destFile);
       
@@ -190,12 +281,15 @@ bool MoveDirectory(char *srcdir, char *destdir)
         FormatLastError();
         PrintColour("Error: ", FOREGROUND_INTENSITY | FOREGROUND_RED);
         printf("%s\n", errorMessage);
+        FreeLastError();
+        FindClose(hFile);
         return 1;
       }
       else printf("File moved.\n");
     }
   }
 
+  FindClose(hFile);
   return 0;
 }
 
@@ -286,6 +380,15 @@ void FormatLastError(void)
     NULL) == 0)
   {
     printf("ERROR: Failed to FormatLastError!\n");
+  }
+}
+
+void FreeLastError(void)
+{
+  if (errorMessage != NULL)
+  {
+    LocalFree(errorMessage);
+    errorMessage = NULL;
   }
 }
 

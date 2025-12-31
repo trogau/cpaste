@@ -87,8 +87,10 @@ bool main(int argc, char *argv[])
     perror( "_getcwd error" );
   else
   {
-    strcpy(destdir, buffer);
-    strcat(destdir, "\\");
+    strncpy(destdir, buffer, _MAX_PATH - 1);
+    destdir[_MAX_PATH - 1] = '\0';
+    if (strlen(destdir) < _MAX_PATH - 1)
+      strcat(destdir, "\\");
   }
   
   if ( !OpenClipboard(NULL) )  
@@ -118,7 +120,8 @@ bool main(int argc, char *argv[])
   {
     retval = DragQueryFile(cliphdrop, inval, string, MAX_PATH );
     
-    strcpy(sourcefile, string);
+    strncpy(sourcefile, string, _MAX_PATH - 1);
+    sourcefile[_MAX_PATH - 1] = '\0';
     
     if (GetFileTitle(string, filename, MAX_PATH ) != 0)
     {
@@ -132,7 +135,13 @@ bool main(int argc, char *argv[])
 #endif
 
     strcpy(dest, destdir);
-    strcat(dest, filename);
+    if (strlen(dest) + strlen(filename) < _MAX_PATH - 1)
+      strcat(dest, filename);
+    else
+    {
+      printf("Error: Path too long for destination\n");
+      return 1;
+    }
     printf("Copying \t%s\nto \t\t%s...\n", sourcefile, dest);
 
     if (IsDirectory(sourcefile))
@@ -153,6 +162,7 @@ bool main(int argc, char *argv[])
             FormatLastError();
             PrintColour("Error: ", FOREGROUND_INTENSITY | FOREGROUND_RED);
             printf("%s\n", errorMessage);
+            FreeLastError();
             return 1;
           }
           else printf("File copied.\n");
@@ -164,6 +174,7 @@ bool main(int argc, char *argv[])
             FormatLastError();
             PrintColour("Error: ", FOREGROUND_INTENSITY | FOREGROUND_RED);
             printf("%s\n", errorMessage);
+            FreeLastError();
             return 1;
           }
           else printf("File copied.\n");
@@ -176,6 +187,7 @@ bool main(int argc, char *argv[])
           FormatLastError();
           PrintColour("Error: ", FOREGROUND_INTENSITY | FOREGROUND_RED);
           printf("%s\n", errorMessage);
+          FreeLastError();
           return 1;
         }
         else printf("File moved.\n");
@@ -190,7 +202,8 @@ bool main(int argc, char *argv[])
 
   //printf("%d item(s) copied.", numitems);
 
-  sprintf(temp, "%d item(s) copied.", numitems);
+  _snprintf(temp, _MAX_PATH, "%d item(s) copied.", numitems);
+  temp[_MAX_PATH - 1] = '\0'; // Ensure null termination
   printf("%s\n", temp);
   //PrintColour(temp, FOREGROUND_INTENSITY | FOREGROUND_RED);
   printf("\n");

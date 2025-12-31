@@ -17,6 +17,14 @@ typedef enum { false, true } bool;
 //
 LPVOID errorMessage;
 
+//
+// void FreeLastError(void);
+//
+//    Free the memory allocated by FormatLastError().
+//    Call after using errorMessage to prevent memory leaks.
+//
+void FreeLastError(void);
+
 
 //
 // bool CopyDirectory(char *srcdir, char *destdir);  

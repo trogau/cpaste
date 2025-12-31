@@ -118,14 +118,14 @@ bool main(int argc, char *argv[])
 
   while (inval < numitems)
   {
-    retval = DragQueryFile(cliphdrop, inval, string, MAX_PATH );
+    retval = DragQueryFile(cliphdrop, inval, string, _MAX_PATH );
     
     strncpy(sourcefile, string, _MAX_PATH - 1);
     sourcefile[_MAX_PATH - 1] = '\0';
     
-    if (GetFileTitle(string, filename, MAX_PATH ) != 0)
+    if (GetFileTitle(string, filename, _MAX_PATH ) != 0)
     {
-      printf("Error: GetFileTitle(%s, %s, %d)\n", string, filename, MAX_PATH);
+      printf("Error: GetFileTitle(%s, %s, %d)\n", string, filename, _MAX_PATH);
       return 1;
     }
 

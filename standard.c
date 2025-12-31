@@ -11,7 +11,7 @@ bool CopyDirectory(char *srcdir, char *destdir)
   char *sd; 
 
   strcpy(sourceDir, srcdir);
-  if (strlen(sourceDir) + 4 < _MAX_PATH) // 4 chars for "\*.*" + null terminator
+  if (strlen(sourceDir) + 4 <= _MAX_PATH - 1)
     strcat(sourceDir, "\\*.*");
   else
   {
@@ -73,7 +73,7 @@ bool CopyDirectory(char *srcdir, char *destdir)
         //printf("<DIR>\t\t%s\\%s\n", srcdir, fd->cFileName);
         char newDir[_MAX_PATH];
         strcpy(newDir, srcdir);
-        if (strlen(newDir) + 1 + strlen(fd->cFileName) < _MAX_PATH)
+        if (strlen(newDir) + 1 + strlen(fd->cFileName) <= _MAX_PATH - 1)
         {
           strcat(newDir, "\\");
           strcat(newDir, fd->cFileName);
@@ -87,7 +87,7 @@ bool CopyDirectory(char *srcdir, char *destdir)
         //printf("New Dirname = %s\n", newDir);
 
         strcpy(createDir, destdir);
-        if (strlen(createDir) + 1 + strlen(fd->cFileName) < _MAX_PATH)
+        if (strlen(createDir) + 1 + strlen(fd->cFileName) <= _MAX_PATH - 1)
         {
           strcat(createDir, "\\");
           strcat(createDir, fd->cFileName);
@@ -118,7 +118,7 @@ bool CopyDirectory(char *srcdir, char *destdir)
       char srcFile[_MAX_PATH];
 
       strcpy(destFile, destdir);
-      if (strlen(destFile) + 1 + strlen(fd->cFileName) < _MAX_PATH)
+      if (strlen(destFile) + 1 + strlen(fd->cFileName) <= _MAX_PATH - 1)
       {
         strcat(destFile, "\\");
         strcat(destFile, fd->cFileName);
@@ -131,7 +131,7 @@ bool CopyDirectory(char *srcdir, char *destdir)
       }
 
       strcpy(srcFile, srcdir);
-      if (strlen(srcFile) + 1 + strlen(fd->cFileName) < _MAX_PATH)
+      if (strlen(srcFile) + 1 + strlen(fd->cFileName) <= _MAX_PATH - 1)
       {
         strcat(srcFile, "\\");
         strcat(srcFile, fd->cFileName);
@@ -171,7 +171,7 @@ bool MoveDirectory(char *srcdir, char *destdir)
   char *sd; 
 
   strcpy(sourceDir, srcdir);
-  if (strlen(sourceDir) + 4 < _MAX_PATH) // 4 chars for "\*.*" + null terminator
+  if (strlen(sourceDir) + 4 <= _MAX_PATH - 1)
     strcat(sourceDir, "\\*.*");
   else
   {
@@ -211,7 +211,7 @@ bool MoveDirectory(char *srcdir, char *destdir)
     {
       char newDir[_MAX_PATH];
       strcpy(newDir, srcdir);
-      if (strlen(newDir) + 1 + strlen(fd->cFileName) < _MAX_PATH)
+      if (strlen(newDir) + 1 + strlen(fd->cFileName) <= _MAX_PATH - 1)
       {
         strcat(newDir, "\\");
         strcat(newDir, fd->cFileName);
@@ -224,7 +224,7 @@ bool MoveDirectory(char *srcdir, char *destdir)
       }
 
       strcpy(createDir, destdir);
-      if (strlen(createDir) + 1 + strlen(fd->cFileName) < _MAX_PATH)
+      if (strlen(createDir) + 1 + strlen(fd->cFileName) <= _MAX_PATH - 1)
       {
         strcat(createDir, "\\");
         strcat(createDir, fd->cFileName);
@@ -249,7 +249,7 @@ bool MoveDirectory(char *srcdir, char *destdir)
       char srcFile[_MAX_PATH];
 
       strcpy(destFile, destdir);
-      if (strlen(destFile) + 1 + strlen(fd->cFileName) < _MAX_PATH)
+      if (strlen(destFile) + 1 + strlen(fd->cFileName) <= _MAX_PATH - 1)
       {
         strcat(destFile, "\\");
         strcat(destFile, fd->cFileName);
@@ -262,7 +262,7 @@ bool MoveDirectory(char *srcdir, char *destdir)
       }
 
       strcpy(srcFile, srcdir);
-      if (strlen(srcFile) + 1 + strlen(fd->cFileName) < _MAX_PATH)
+      if (strlen(srcFile) + 1 + strlen(fd->cFileName) <= _MAX_PATH - 1)
       {
         strcat(srcFile, "\\");
         strcat(srcFile, fd->cFileName);

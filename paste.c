@@ -91,8 +91,11 @@ bool main(int argc, char *argv[])
     strcat(destdir, "\\");
   }
   
-  if ( !OpenClipboard(NULL) )  
-	  printf("ERROR: Cannot open clipboard.\n");
+  if ( !OpenClipboard(NULL) )
+  {
+    printf("ERROR: Cannot open clipboard.\n");
+    return 1;
+  }
 
   if (IsClipboardFormatAvailable(CF_HDROP))
   {
@@ -103,16 +106,21 @@ bool main(int argc, char *argv[])
   else 
   {
     printf("FAILURE: Invalid clipboard format.\n");
+    CloseClipboard();
     return 1;
   }
 
   if ( (cliphdrop = (HDROP) GetClipboardData(CF_HDROP)) == NULL)
   {
     MessageBox(NULL, "Call to GetClipboardData failed - Wrong data type on clipboard.", "Failure", MB_ICONSTOP );
+    CloseClipboard();
     return 1;
   }  
 
   numitems = DragQueryFile(cliphdrop, 0xFFFFFFFF, NULL, 0 );
+
+  if (CloseClipboard() == 0)
+    printf("ERROR: Cannot close clipboard\n");
 
   while (inval < numitems)
   {
@@ -184,9 +192,6 @@ bool main(int argc, char *argv[])
 
     inval++;  
   }
-
-  if (CloseClipboard() == 0)
-    printf("ERROR: Cannot close clipboard\n");
 
   //printf("%d item(s) copied.", numitems);
 

@@ -89,7 +89,7 @@ bool main(int argc, char *argv[])
   {
     strncpy(destdir, buffer, _MAX_PATH - 1);
     destdir[_MAX_PATH - 1] = '\0';
-    if (strlen(destdir) + 1 <= _MAX_PATH - 1)
+    if (strlen(destdir) + 1 < _MAX_PATH)
       strcat(destdir, "\\");
   }
   
@@ -135,7 +135,7 @@ bool main(int argc, char *argv[])
 #endif
 
     strcpy(dest, destdir);
-    if (strlen(dest) + strlen(filename) <= _MAX_PATH - 1)
+    if (strlen(dest) + strlen(filename) < _MAX_PATH)
       strcat(dest, filename);
     else
     {
